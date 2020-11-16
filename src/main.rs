@@ -12,7 +12,7 @@ fn main() {
 
     if env::args().count() > 1 {
         match env::args().nth(1) {
-            None => {println!("{}: nothing to time", PROGRAM)}
+            None => println!("{}: nothing to time", PROGRAM),
             Some(name) => {
                 let mut program = Command::new(name);
 
@@ -22,36 +22,38 @@ fn main() {
 
                 for i in 2..env::args().count() {
                     match env::args().nth(i) {
-                        Some(arg) => { program.arg(arg); }
+                        Some(arg) => {
+                            program.arg(arg);
+                        }
                         None => {}
                     }
                 }
 
                 match program.status() {
-                    Ok(status) => {
-                        match status.code() {
-                            Some(code) => { exit_code = code;}
-                            None => {}
+                    Ok(status) => match status.code() {
+                        Some(code) => {
+                            exit_code = code;
                         }
-                    }
+                        None => {}
+                    },
                     Err(err) => {
                         println!("{}", err);
                         exit_code = 1;
                     }
                 }
             }
-
         }
     }
 
     match start.elapsed() {
-        Ok(time) => { println!("{}: took {:#?}", PROGRAM, time); }
+        Ok(time) => {
+            println!("{}: took {:#?}", PROGRAM, time);
+        }
         Err(err) => {
             println!("{}", err);
             exit_code = 1;
         }
     }
-
 
     std::process::exit(exit_code)
 }
