@@ -21,20 +21,14 @@ fn main() {
                 program.stderr(Stdio::inherit());
 
                 for i in 2..env::args().count() {
-                    match env::args().nth(i) {
-                        Some(arg) => {
-                            program.arg(arg);
-                        }
-                        None => {}
+                    if let Some(arg) = env::args().nth(i) {
+                        program.arg(arg);
                     }
                 }
 
                 match program.status() {
-                    Ok(status) => match status.code() {
-                        Some(code) => {
-                            exit_code = code;
-                        }
-                        None => {}
+                    Ok(status) => if let Some(code) = status.code() {
+                        exit_code = code;
                     },
                     Err(err) => {
                         println!("{}", err);
